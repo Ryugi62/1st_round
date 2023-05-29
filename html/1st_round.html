@@ -1,283 +1,342 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About | SEOUL SMART CITY PRIZE</title>
 
     <!-- 공통 CSS -->
     <link rel="stylesheet" type="text/css" href="../css/reset.css" />
-	<link rel="stylesheet" type="text/css" href="../css/xeicon.css">
+    <link rel="stylesheet" type="text/css" href="../css/xeicon.css" />
     <link rel="stylesheet" type="text/css" href="../css/layout.css" />
 
     <!-- 카테고리/페이지별 CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/sub.css">
+    <link rel="stylesheet" type="text/css" href="../css/sub.css" />
 
     <!-- 공통 스크립트 -->
-    <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="../js/connect.js"></script>
+
+    <!-- 카테고리/페이지별 스크립트 -->
     <script type="text/javascript" src="../js/script.js"></script>
-    <script type="text/javascript" src="../js/createTable.js"></script>
     <script type="text/javascript" src="../js/paginate.js"></script>
-
-
-
-</head>
-
-<body>
-	<div id="wrap">
-		<div id="header" class="lyt_full">
-            <div class="lyt_grid">
-                <h2 id="logo"><a href="index.html"><img src="../img/logo_w.png" alt="Seoul smart city prize logo"></a></h2>
-				<a id="btn_nav" href="#" ><i class="xi-bars"></i></a>
-                <div id="nav">
-					<a id="btn_close_nav" href="#" ><i class="xi-close"></i></a>
-					<div class="gnb_wrap">
-						<ul id="gnb">
-							<li><a href="#">Login</a></li>
-							<li><a href="#">Mypage</a></li>
-						</ul>
-					</div>
-                    <ul id="lnb">
-                        <li class="add_deps"><a href="#">About</a>
-                            <ul>
-                                <li><a href="about.html">About</a></li>
-								<li><a href="greeting.html">Greeting</a></li>
-								<li><a href="steering_committee.html">Steering Committee</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="guideline.html">Guideline</a> </li>
-                        <li class="add_deps"><a href="#">Application</a>
-                            <ul>
-                                <li><a href="application_intro.html">Intro</a></li>
-                                <li><a href="innovacity.html">Innovacity</a></li>
-                                <li><a href="human_centricity.html">Human-CentriCity</a></li>
-                                <li><a href="leadership.html">Leadership</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="news.html">News</a></li>
-                        <li><a href="ceremony.html">Ceremony</a></li>
-                    </ul>
-                </div>
+    <script type="text/javascript" src="../js/createTable.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="header" class="lyt_full">
+        <div class="lyt_grid">
+          <h2 id="logo">
+            <a href="index.html"
+              ><img src="../img/logo_w.png" alt="Seoul smart city prize logo"
+            /></a>
+          </h2>
+          <a id="btn_nav" href="#"><i class="xi-bars"></i></a>
+          <div id="nav">
+            <a id="btn_close_nav" href="#"><i class="xi-close"></i></a>
+            <div class="gnb_wrap">
+              <ul id="gnb">
+                <li><a href="#">Login</a></li>
+                <li><a href="#">Mypage</a></li>
+              </ul>
             </div>
-        </div><!-- #header end -->
-
-		<div id="section">
-			<div id="sub_top" class="lyt_full">
-                <div id="s_visual05" class="s_visual"></div> <!-- Deps1 Img -->
-                <h2>Judge</h2> <!-- Deps1 MenuName -->
-            </div>
-
-			<!--page start-->
-			<div id="s_contents" class="lyt_full first_round">
-                <div class="lyt_grid ">
-                    <div class="top-contents-box">
-                        <!-- <div class="page-logo"><img src="../img/sscp_logo.png" alt="Seoul smart city prize logo"></div> -->
-                    </div>
-                    <h3 class="table-title">1st Round Judging</h3>
-                    <div class="select-section">
-                        <div class="txt-box">
-                            <h5>Welcome to the 2nd Evaluation Round of the Seoul Smart City Prize.<br>
-                                This page is restricted to the members of the Evaluation Committee.</h5>
-                            <div class="txt">
-                                <ul>
-                                    <li>Click ‘Evaluate’ to start judging the projects that have passed the 1st round.
-                                    </li>
-                                    <li>Click the Judging Manual <b>[PDF]</b> to see how to evaluate the projects.</li>
-                                    <a href="#" target="_blank"><i class="fa-regular fa-file-pdf"></i>Judging
-                                        Manual</a>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="table-category">
-                            <div class="select-box">
-                                <div class="select-title">
-                                    <h5>Category</h5>
-                                </div>
-                                <div class="select-list">
-                                    <label for="select-category" class="read_only">Category Select</label>
-                                    <select id="select-category" class="table-select select-category">
-                                        <option value="All" selected>All</option>
-                                        <option value="Tech">Tech</option>
-                                        <option value="Human">Human</option>
-                                        <option value="Leadership">Leadership</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="select-box select02">
-                                <div class="select-title"><h5>Applicant</h5></div>
-                                <div class="select-list">
-                                    <label for="select-applicant" class="read_only">Applicant Select</label>
-                                    <select id="select-applicant" class="table-select select-applicant">
-                                        <option value="All" selected>All</option>
-                                        <option value="ID_01">ID_01</option>
-                                        <option value="ID_02">ID_02</option>
-                                        <option value="ID_03">ID_03</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="select-btn">
-                                <button type="submit">Search(button)</button>
-                                <!-- <input type="submit" style="margin-top:15px" value="Search"> -->
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="cate-wrap" data-n="1">
-                        <ul class="category-contents-nav">
-                            <li>
-                                <div data-n="1" class="on">All</div>
-                            </li>
-                            <li>
-                                <div data-n="2">test off</div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="cate-wrap" data-n="2">
-                        <ul class="category-contents-nav">
-                            <li>
-                                <div data-n="1" class="on">All</div>
-                            </li>
-                            <li>
-                                <div data-n="2">Tech</div>
-                            </li>
-                            <li>
-                                <div data-n="3">Human</div>
-                            </li>
-                            <li>
-                                <div data-n="4">Leadership</div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="cate-wrap" data-n="3">
-                        <ul class="category-contents-nav">
-                            <li>
-                                <div data-n="1" class="on">All</div>
-                            </li>
-                            <li>
-                                <div data-n="2">City</div>
-                            </li>
-                            <li>
-                                <div data-n="3">Corp</div>
-                            </li>
-                            <li>
-                                <div data-n="4">Inst</div>
-                            </li>
-                            <li>
-                                <div data-n="5">Individual </div>
-                            </li>
-                        </ul>
-                    </div>
-
-
-                            <div class="table-container">
-                                <table class="judge">
-                                    <caption class="read_only">Judge table</caption>
-                                    <thead>
-                                      <tr>
-                                        <th scope="col" class="all_chk chk_box">
-                                          <input type="checkbox" id="chkall" onclick="" class="selec_chk">
-                                          <label for="chkall">
-                                            <span></span>
-                                            <b class="read_only">All check</b>
-                                          </label>
-                                        </th>
-                                        <th scope="col">Group</th>
-                                        <th scope="col">field1</th>
-                                        <th scope="col">field2</th>
-                                        <th scope="col">field3</th>
-                                        <th scope="col">field4</th>
-                                        <th scope="col">field5</th>
-                                        <th scope="col">field6</th>
-                                        <th scope="col">field7</th>
-                                        <th scope="col">button01</th>
-                                        <th scope="col">button02</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody id="tableBody">
-                                      <!-- Empty tbody, dynamically generated by JavaScript -->
-                                    </tbody>
-                                  </table>
-                                    <div class="bt_btn">
-                                    <button type="button" class="bo_modify" title="Modify">Modify</button>
-                                </div>
-                    </div>
-
-
-
-
-                </div>
-            </div><!-- #section end -->
-
-		<div id="footer" class="lyt_full">
-			<div class="ft_info">
-                <ul class="ft_info_list">
-                    <li><a href="#">Terms & Conditions</a></li>
-                    <li><a href="#">Privacy policy</a></li>
+            <ul id="lnb">
+              <li class="add_deps">
+                <a href="#">About</a>
+                <ul>
+                  <li><a href="about.html">About</a></li>
+                  <li><a href="greeting.html">Greeting</a></li>
+                  <li>
+                    <a href="steering_committee.html">Steering Committee</a>
+                  </li>
                 </ul>
-            </div><!-- .ft_info -->
-			
-			<div class="ft_contact lyt_grid">
-                <p class="ft_mail">Contact Us : <a href="matilto:info@seoulsmartcityprize.com">info@seoulsmartcityprize.com</a></p>
-                <div id="fnb">
-                    <div class="fnb_list">
-                        <h2>ABOUT</h2>
-                        <ul>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="greeting.html">Greeting</a></li>
-                            <li><a href="steering_committee.html">Steering Committee</a></li>
-                        </ul>
-                    </div>
-                    <div class="fnb_list">
-                        <h2>Guideline</h2>
-                        <ul>
-                            <li><a href="guideline.html">Guideline</a></li>
-                        </ul>
-                    </div>
-                    <div class="fnb_list">
-                        <h2>Application</h2>
-                        <ul>
-                            <li><a href="application_intro.html">Intro</a></li>
-                            <li><a href="tech_innovacity.html">Innovacity</a></li>
-                            <li><a href="human_centricity.html">Human-CentriCity</a></li>
-                            <li><a href="leadership.html">Leadership</a></li>
-                        </ul>
-                    </div>
-                    <div class="fnb_list">
-                        <h2>Winner</h2>
-                        <ul>
-							<li><a href="news.html">News</a></li>
-                        </ul>
-                    </div>
-                    <div class="fnb_list">
-                        <h2>Ceremony</h2>
-                        <ul>
-                            <li><a href="ceremony.html">Ceremony</a></li>
-                        </ul>
-                    </div>
-                </div><!-- #fnb end -->
+              </li>
+              <li><a href="guideline.html">Guideline</a></li>
+              <li class="add_deps">
+                <a href="#">Application</a>
+                <ul>
+                  <li><a href="application_intro.html">Intro</a></li>
+                  <li><a href="innovacity.html">Innovacity</a></li>
+                  <li><a href="human_centricity.html">Human-CentriCity</a></li>
+                  <li><a href="leadership.html">Leadership</a></li>
+                </ul>
+              </li>
+              <li><a href="news.html">News</a></li>
+              <li><a href="ceremony.html">Ceremony</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- #header end -->
 
-                <div class="family_site">
-                    <label for="site_select" class="read_only">Family Site:</label>
-                    <select name="family_site" id="site_select" onchange="if(this.value) window.open(this.value);">
-                        <option value="">Family Site</option>
-                        <option value="#">사이트1</option>
-                        <option value="#">사이트2</option>
-                    </select>
-                </div><!-- .family_site end -->
-            </div> <!-- .ft_contact end -->
+      <div id="section">
+        <div id="sub_top" class="lyt_full">
+          <div id="s_visual05" class="s_visual"></div>
+          <!-- Deps1 Img -->
+          <h2>Judge</h2>
+          <!-- Deps1 MenuName -->
+        </div>
 
-			<div class="copyright">
-                <p>COPYRIGHT © 2023 Seoul Smart City Prize Secretariat. ALL RIGHTS RESERVED.</p>
+        <!--page start-->
+        <div id="s_contents" class="lyt_full first_round">
+          <div class="lyt_grid">
+            <div class="top-contents-box">
+              <!-- <div class="page-logo"><img src="../img/sscp_logo.png" alt="Seoul smart city prize logo"></div> -->
             </div>
-			<a href="#" id="btn_top"><img src="../img/up_arrow_off.png" alt="Move to top" class="on"></a>
-		</div><!-- #footer end -->
+            <h3 class="table-title">1st Round Judging</h3>
+            <div class="select-section">
+              <div class="txt-box">
+                <h5>
+                  Welcome to the 2nd Evaluation Round of the Seoul Smart City
+                  Prize.<br />
+                  This page is restricted to the members of the Evaluation
+                  Committee.
+                </h5>
+                <div class="txt">
+                  <ul>
+                    <li>
+                      Click ‘Evaluate’ to start judging the projects that have
+                      passed the 1st round.
+                    </li>
+                    <li>
+                      Click the Judging Manual <b>[PDF]</b> to see how to
+                      evaluate the projects.
+                    </li>
+                    <a href="#" target="_blank"
+                      ><i class="fa-regular fa-file-pdf"></i>Judging Manual</a
+                    >
+                  </ul>
+                </div>
+              </div>
+              <div class="table-category">
+                <div class="select-box">
+                  <div class="select-title">
+                    <h5>Category</h5>
+                  </div>
+                  <div class="select-list">
+                    <label for="select-category" class="read_only"
+                      >Category Select</label
+                    >
+                    <select
+                      id="select-category"
+                      class="table-select select-category"
+                    >
+                      <option value="All" selected>All</option>
+                      <option value="Tech">Tech</option>
+                      <option value="Human">Human</option>
+                      <option value="Leadership">Leadership</option>
+                    </select>
+                  </div>
+                </div>
 
-	</div><!-- #wrap end -->
-</body>
+                <div class="select-box select02">
+                  <div class="select-title"><h5>Applicant</h5></div>
+                  <div class="select-list">
+                    <label for="select-applicant" class="read_only"
+                      >Applicant Select</label
+                    >
+                    <select
+                      id="select-applicant"
+                      class="table-select select-applicant"
+                    >
+                      <option value="All" selected>All</option>
+                      <option value="ID_01">ID_01</option>
+                      <option value="ID_02">ID_02</option>
+                      <option value="ID_03">ID_03</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="select-btn">
+                  <button type="submit">Search(button)</button>
+                  <!-- <input type="submit" style="margin-top:15px" value="Search"> -->
+                </div>
+              </div>
+            </div>
 
+            <div class="cate-wrap" data-n="1">
+              <ul class="category-contents-nav">
+                <li>
+                  <div data-n="1" class="on">All</div>
+                </li>
+                <li>
+                  <div data-n="2">test off</div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="cate-wrap" data-n="2">
+              <ul class="category-contents-nav">
+                <li>
+                  <div data-n="1" class="on">All</div>
+                </li>
+                <li>
+                  <div data-n="2">Tech</div>
+                </li>
+                <li>
+                  <div data-n="3">Human</div>
+                </li>
+                <li>
+                  <div data-n="4">Leadership</div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="cate-wrap" data-n="3">
+              <ul class="category-contents-nav">
+                <li>
+                  <div data-n="1" class="on">All</div>
+                </li>
+                <li>
+                  <div data-n="2">City</div>
+                </li>
+                <li>
+                  <div data-n="3">Corp</div>
+                </li>
+                <li>
+                  <div data-n="4">Inst</div>
+                </li>
+                <li>
+                  <div data-n="5">Individual</div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="table-container">
+              <table class="judge" id="myTable">
+                <caption class="read_only">
+                  Judge table
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col" class="all_chk chk_box">
+                      <input
+                        type="checkbox"
+                        id="chkall"
+                        onclick=""
+                        class="selec_chk header-checkbox"
+                      />
+                      <label for="chkall">
+                        <span></span>
+                        <b class="read_only">All check</b>
+                      </label>
+                    </th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Organization</th>
+                    <th scope="col">field1</th>
+                    <th scope="col">field2</th>
+                    <th scope="col">field3</th>
+                    <th scope="col">field4</th>
+                    <th scope="col">field5</th>
+                    <th scope="col">field6</th>
+                    <th scope="col">field7</th>
+                    <th scope="col">field8</th>
+                    <th scope="col">field9</th>
+                    <th scope="col">field10</th>
+                    <th scope="col">button01</th>
+                    <th scope="col">button02</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <!-- Empty tbody, dynamically generated by JavaScript -->
+                </tbody>
+              </table>
+              <div class="bt_btn">
+                <button type="button" class="bo_modify" title="Modify">
+                  Modify
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- #section end -->
+
+        <div id="footer" class="lyt_full">
+          <div class="ft_info">
+            <ul class="ft_info_list">
+              <li><a href="#">Terms & Conditions</a></li>
+              <li><a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+          <!-- .ft_info -->
+
+          <div class="ft_contact lyt_grid">
+            <p class="ft_mail">
+              Contact Us :
+              <a href="matilto:info@seoulsmartcityprize.com"
+                >info@seoulsmartcityprize.com</a
+              >
+            </p>
+            <div id="fnb">
+              <div class="fnb_list">
+                <h2>ABOUT</h2>
+                <ul>
+                  <li><a href="about.html">About</a></li>
+                  <li><a href="greeting.html">Greeting</a></li>
+                  <li>
+                    <a href="steering_committee.html">Steering Committee</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="fnb_list">
+                <h2>Guideline</h2>
+                <ul>
+                  <li><a href="guideline.html">Guideline</a></li>
+                </ul>
+              </div>
+              <div class="fnb_list">
+                <h2>Application</h2>
+                <ul>
+                  <li><a href="application_intro.html">Intro</a></li>
+                  <li><a href="tech_innovacity.html">Innovacity</a></li>
+                  <li><a href="human_centricity.html">Human-CentriCity</a></li>
+                  <li><a href="leadership.html">Leadership</a></li>
+                </ul>
+              </div>
+              <div class="fnb_list">
+                <h2>Winner</h2>
+                <ul>
+                  <li><a href="news.html">News</a></li>
+                </ul>
+              </div>
+              <div class="fnb_list">
+                <h2>Ceremony</h2>
+                <ul>
+                  <li><a href="ceremony.html">Ceremony</a></li>
+                </ul>
+              </div>
+            </div>
+            <!-- #fnb end -->
+
+            <div class="family_site">
+              <label for="site_select" class="read_only">Family Site:</label>
+              <select
+                name="family_site"
+                id="site_select"
+                onchange="if(this.value) window.open(this.value);"
+              >
+                <option value="">Family Site</option>
+                <option value="#">사이트1</option>
+                <option value="#">사이트2</option>
+              </select>
+            </div>
+            <!-- .family_site end -->
+          </div>
+          <!-- .ft_contact end -->
+
+          <div class="copyright">
+            <p>
+              COPYRIGHT © 2023 Seoul Smart City Prize Secretariat. ALL RIGHTS
+              RESERVED.
+            </p>
+          </div>
+          <a href="#" id="btn_top"
+            ><img src="../img/up_arrow_off.png" alt="Move to top" class="on"
+          /></a>
+        </div>
+        <!-- #footer end -->
+      </div>
+      <!-- #wrap end -->
+    </div>
+  </body>
 </html>

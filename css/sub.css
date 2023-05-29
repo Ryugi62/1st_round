@@ -736,8 +736,9 @@ first_round
 
 /* paging */
 div.paginate{
+	display: flex;
     margin-top:20px;
-    display: flex;
+	justify-content: center;
 }
 div.paginate input[type='button']:hover{
     cursor: pointer;
