@@ -44,9 +44,9 @@ $(document).ready(async function () {
     });
 
     let options = {
-      numberPerPage: 20, //Cantidad de datos por pagina
-      goBar: false, //Barra donde puedes digitar el numero de la pagina al que quiere ir
-      pageCounter: false, //Contador de paginas, en cual estas, de cuantas paginas
+      numberPerPage: 20, // 페이지당 표시할 데이터 수
+      goBar: false, // 페이지 이동을 위한 입력 창 표시 여부
+      pageCounter: false, // 페이지 카운터 표시 여부
     };
 
     paginate.init(".judge", options);
@@ -54,9 +54,10 @@ $(document).ready(async function () {
     // 툴팁 이벤트 처리
     $(".truncate-tooltip").on("mouseenter", handleTooltip);
 
+    const thead = $("thead");
+
     // 테이블 헤더에 클릭 이벤트 연결
-    tbody.find("tr:first-child th").on("click", function () {
-      console.log("th click");
+    thead.find("th").on("click", function () {
       if (isSorting) {
         return; // 정렬 중일 때는 클릭 이벤트 무시
       }
@@ -72,23 +73,20 @@ $(document).ready(async function () {
       const sortOrder = getNextSortOrder(sortOrders[headerIndex]);
       sortOrders[headerIndex] = sortOrder;
 
-      // 비동기로 테이블 정렬 및 갱신 작업 수행
-      setTimeout(async function () {
-        table_data = await sortTableData(table_data, headerIndex, sortOrder);
+      // 테이블 데이터 정렬
+      table_data = sortTableData(table_data, headerIndex, sortOrder);
 
-        previousHeaderIndex = headerIndex;
+      previousHeaderIndex = headerIndex;
 
-        // 테이블 갱신
-        refreshTable();
+      // 테이블 갱신
+      refreshTable();
 
-        isSorting = false; // 정렬 종료
-      }, 0);
+      isSorting = false; // 정렬 종료
     });
-    console.log(tbody.find("th"));
   }
 
   // 테이블 데이터 정렬 함수
-  async function sortTableData(data, columnIndex, sortOrder) {
+  function sortTableData(data, columnIndex, sortOrder) {
     const compareFunction = (a, b) => {
       const valueA = String(a[columnIndex]);
       const valueB = String(b[columnIndex]);
@@ -123,35 +121,4 @@ $(document).ready(async function () {
     const text = cell.text();
     cell.attr("title", cell[0].scrollWidth > cell.innerWidth() ? text : null);
   }
-
-  // tbody의 첫 번째 행에 있는 th 요소에 클릭 이벤트 연결
-  tbody.find("tr:first-child th").on("click", function () {
-    console.log("th click");
-    if (isSorting) {
-      return; // 정렬 중일 때는 클릭 이벤트 무시
-    }
-
-    isSorting = true; // 정렬 시작
-
-    const headerIndex = $(this).index();
-
-    if (previousHeaderIndex !== headerIndex) {
-      sortOrders = Array(table_data[0].length).fill(""); // 이전 헤더와 다른 경우 정렬 순서 배열 초기화
-    }
-
-    const sortOrder = getNextSortOrder(sortOrders[headerIndex]);
-    sortOrders[headerIndex] = sortOrder;
-
-    // 비동기로 테이블 정렬 및 갱신 작업 수행
-    setTimeout(async function () {
-      table_data = await sortTableData(table_data, headerIndex, sortOrder);
-
-      previousHeaderIndex = headerIndex;
-
-      // 테이블 갱신
-      refreshTable();
-
-      isSorting = false; // 정렬 종료
-    }, 0);
-  });
 });
