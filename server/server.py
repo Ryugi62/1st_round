@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, jsonify
 from flask_cors import CORS
 import mysql.connector
 import os
@@ -8,17 +8,19 @@ CORS(app)
 
 # MySQL 연결 설정
 db = mysql.connector.connect(
-    host="호스트",
-    user="아이디",
-    password="비밀번호",
-    database="데이터베이스"
+    host="localhost",
+    user="root",
+    password="password",
+    database="1st_round"
 )
 
+# 데이터의 키 순서 정의
+key_order = ["memberID", "Organization", "Type_3", "Country", "City_name", "Project_Title", "Type_2",
+             "Email", "Eval_R1", "Score_from_Eval_R2", "Weighted_Score_for_Eval_R3", "Final_voting_result"]
 
-#
+
 @app.route("/")
 def first_round():
-    print("first_round")
     return send_from_directory(app.static_folder, "html/1st_round.html")
 
 
@@ -30,24 +32,32 @@ def api_data():
     # Sorting
     sort_field = request.args.get("sort")
     if sort_field:
-        sort_query = f"SELECT Organization, Type_3, Country, City_name, Project_Title, Type_2, Email, Eval_R1, Score_from_Eval_R2, Weighted_Score_for_Eval_R3, Final_voting_result FROM members ORDER BY {sort_field}"
+        sort_query = f"SELECT memberID, Organization, Type_3, Country, City_name, Project_Title, Type_2, Email, Eval_R1, Score_from_Eval_R2, Weighted_Score_for_Eval_R3, Final_voting_result FROM members ORDER BY {sort_field}"
         cursor.execute(sort_query)
     else:
-        cursor.execute("SELECT Organization, Type_3, Country, City_name, Project_Title, Type_2, Email, Eval_R1, Score_from_Eval_R2, Weighted_Score_for_Eval_R3, Final_voting_result FROM members")
+        cursor.execute("SELECT memberID, Organization, Type_3, Country, City_name, Project_Title, Type_2, Email, Eval_R1, Score_from_Eval_R2, Weighted_Score_for_Eval_R3, Final_voting_result FROM members")
     result = cursor.fetchall()
 
-    # Filtering
-    filter_value = request.args.get("filter")
-    if filter_value:
-        filtered_result = []
-        for row in result:
-            # Assuming filter on 'Organization' field
-            if row[0] == filter_value:
-                filtered_result.append(row)
-        result = filtered_result
+    # Formatting result as a list of dictionaries
+    data = []
+    for row in result:
+        data.append({
+            "memberID": row[0],
+            "Organization": row[1],
+            "Type_3": row[2],
+            "Country": row[3],
+            "City_name": row[4],
+            "Project_Title": row[5],
+            "Type_2": row[6],
+            "Email": row[7],
+            "Eval_R1": row[8],
+            "Score_from_Eval_R2": row[9],
+            "Weighted_Score_for_Eval_R3": row[10],
+            "Final_voting_result": row[11]
+        })
 
-    print(result)
-    return {"data": result}
+    # 데이터와 키 순서를 JSON으로 변환하여 응답
+    return jsonify({"data": data, "key_order": key_order})
 
 
 @app.route("/css/<path:path>")

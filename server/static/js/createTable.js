@@ -1,124 +1,214 @@
 $(document).ready(async function () {
   const tbody = $("tbody");
-  let table_data = await get_table_data();
-  let sortOrders = Array(table_data[0].length).fill(""); // 초기 정렬 순서 배열
+  let tableData = await getTableData();
+  const n = 20; // 페이지당 데이터 개수
+
+  console.log(tableData[0]);
+  let sortOrders = Array(tableData[0].length).fill(0);
   let previousHeaderIndex = -1;
-  let isSorting = false; // 정렬 중 여부를 나타내는 플래그 변수
+  let isSorting = false;
+  let currentPage = 1;
+  let totalPages = Math.ceil(tableData.length / n); // Calculate the total number of pages
 
-  // 초기 테이블 생성
-  refreshTable();
+  initializeTable(); // 테이블 초기화
 
-  // 테이블 갱신 함수
-  function refreshTable() {
+  async function initializeTable() {
+    // thead 초기화
+    const thead = $("thead");
+    const headers = Object.keys(tableData[0]);
+
+    thead.empty();
+
+    const headerCells = headers.map((header) => `<th>${header}</th>`);
+    headerCells.unshift("<th>No</th>"); // No 값을 추가
+    headerCells.push("<th>Download Application</th>"); // No 값을 추가
+    headerCells.push("<th>Test (Delete) Application</th>"); // No 값을 추가
+
+    thead.append(`<tr>${headerCells.join("")}</tr>`);
+
+    displayTableData(tableData, currentPage);
+  }
+
+  function displayTableData(data, page) {
     tbody.empty();
 
-    table_data.forEach((rowData, i) => {
+    const startIndex = (page - 1) * n;
+    const endIndex = page * n;
+
+    const currentPageData = data.slice(startIndex, endIndex);
+
+    currentPageData.forEach((rowData, i) => {
+      const rowDataArray = Object.values(rowData);
+      const tableData = rowDataArray
+        .map((data) => `<td class="truncate-tooltip">${data}</td>`)
+        .join("");
+
       const tr = $("<tr></tr>").html(`
+        <td>${startIndex + i + 1}</td>
+        ${tableData}
         <td>
-          <input type="checkbox" class="row-checkbox">
+          <button type="submit" class="pass">Button</button>
         </td>
         <td>
-          <label for="group_col${i}" class="read_only">select group</label>
-          <select id="group_col${i}" class="app_group_select">
-            <option value="Select">Select</option>
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-            <option value="D">D</option>
+          <select class="app_group_select">
+            <option value="1">1</option>
+            <option value="2">2</option>
           </select>
-        </td>
-        ${rowData
-          .map((data) => `<td class="truncate-tooltip">${data}</td>`)
-          .join("")}
-        <td>
-          <button type="submit" class="pass">Pass</button>
-          <button type="submit" class="fail">Fail</button>
-        </td>
-        <td>
-          <input type="submit" class="pass" value="Pass">
-          <input type="submit" class="fail" value="Fail">
+          <button type="submit" class="fail">Button</button>
         </td>
       `);
 
       tbody.append(tr);
     });
 
-    let options = {
-      numberPerPage: 20, // 페이지당 표시할 데이터 수
-      goBar: false, // 페이지 이동을 위한 입력 창 표시 여부
-      pageCounter: false, // 페이지 카운터 표시 여부
-    };
-
-    paginate.init(".judge", options);
-
-    // 툴팁 이벤트 처리
-    $(".truncate-tooltip").on("mouseenter", handleTooltip);
-
-    const thead = $("thead");
-
-    // 테이블 헤더에 클릭 이벤트 연결
-    thead.find("th").on("click", function () {
-      if (isSorting) {
-        return; // 정렬 중일 때는 클릭 이벤트 무시
-      }
-
-      isSorting = true; // 정렬 시작
-
-      const headerIndex = $(this).index();
-
-      if (previousHeaderIndex !== headerIndex) {
-        sortOrders = Array(table_data[0].length).fill(""); // 이전 헤더와 다른 경우 정렬 순서 배열 초기화
-      }
-
-      const sortOrder = getNextSortOrder(sortOrders[headerIndex]);
-      sortOrders[headerIndex] = sortOrder;
-
-      // 테이블 데이터 정렬
-      table_data = sortTableData(table_data, headerIndex, sortOrder);
-
-      previousHeaderIndex = headerIndex;
-
-      // 테이블 갱신
-      refreshTable();
-
-      isSorting = false; // 정렬 종료
-    });
+    createPagination(); // 인덱스 이동 버튼 생성
   }
 
-  // 테이블 데이터 정렬 함수
-  function sortTableData(data, columnIndex, sortOrder) {
-    const compareFunction = (a, b) => {
-      const valueA = String(a[columnIndex]);
-      const valueB = String(b[columnIndex]);
-      return valueA.localeCompare(valueB);
-    };
+  function createPagination() {
+    const paginationContainer = $("<div></div>").addClass("paginate");
 
-    const sortedData = [...data]; // 정렬된 데이터를 담을 새로운 배열 생성
+    const prevButton = $("<input>")
+      .attr("type", "button")
+      .val("<")
+      .addClass("paginate_control_prev");
+    prevButton.on("click", function () {
+      if (currentPage > 1) {
+        currentPage--;
+        displayTableData(tableData, currentPage);
+      }
+    });
 
-    if (sortOrder === "desc") {
-      sortedData.sort((a, b) => compareFunction(b, a));
-    } else if (sortOrder === "asc") {
-      sortedData.sort(compareFunction);
+    paginationContainer.append(prevButton);
+
+    for (let i = 1; i <= totalPages; i++) {
+      const pageButton = $("<input>")
+        .attr("type", "button")
+        .val(i)
+        .addClass("paginate_button");
+      if (i === currentPage) {
+        pageButton.addClass("active");
+      }
+      pageButton.on("click", function () {
+        currentPage = i;
+        displayTableData(tableData, currentPage);
+      });
+
+      paginationContainer.append(pageButton);
     }
+
+    const nextButton = $("<input>")
+      .attr("type", "button")
+      .val(">")
+      .addClass("paginate_control_next");
+    nextButton.on("click", function () {
+      if (currentPage < totalPages) {
+        currentPage++;
+        displayTableData(tableData, currentPage);
+      }
+    });
+
+    paginationContainer.append(nextButton);
+
+    $("#pagination").remove();
+
+    // Create a new pagination element and append it below the table
+    const paginationElement = $("<div></div>")
+      .attr("id", "pagination")
+      .append(paginationContainer);
+    $("table").after(paginationElement);
+  }
+
+  async function getSortedTableData(columnIndex, sortOrder) {
+    if (sortOrder === 1 || sortOrder === 2) {
+      const sortedData = sortTableData(tableData, columnIndex, sortOrder);
+      return sortedData;
+    } else {
+      // sortOrder가 1이나 2가 아닌 경우에는 새로운 데이터를 불러옴
+      tableData = await getTableData();
+      return tableData;
+    }
+  }
+
+  function sortTableData(data, columnIndex, sortOrder) {
+    const sortedData = [...data];
+
+    sortedData.sort((a, b) => {
+      const valueA = String(Object.values(a)[columnIndex]); // 수정된 부분
+      const valueB = String(Object.values(b)[columnIndex]); // 수정된 부분
+
+      if (sortOrder === 1) {
+        return valueA.localeCompare(valueB);
+      } else if (sortOrder === 2) {
+        return valueB.localeCompare(valueA);
+      }
+    });
 
     return sortedData;
   }
 
-  // 다음 정렬 순서 반환 함수
   function getNextSortOrder(currentSortOrder) {
-    if (currentSortOrder === "asc") {
-      return "desc";
-    } else if (currentSortOrder === "desc") {
-      return "";
+    if (currentSortOrder === 1) {
+      return 2;
+    } else if (currentSortOrder === 2) {
+      return 0;
     } else {
-      return "asc";
+      return 1;
     }
   }
 
-  // 툴팁 처리 함수
   function handleTooltip() {
-    const cell = $(this);
-    const text = cell.text();
-    cell.attr("title", cell[0].scrollWidth > cell.innerWidth() ? text : null);
+    $("table").on("mouseenter", "td", function () {
+      var $this = $(this);
+      if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
+        $this.tooltip({
+          title: $this.text(),
+          placement: "top",
+          trigger: "hover",
+          container: "body",
+        });
+        $this.tooltip("show");
+      }
+    });
   }
+
+  tbody.on("click", ".truncate-tooltip", handleTooltip);
+
+  const thead = $("thead");
+
+  thead.on("click", "th", async function () {
+    if (isSorting) {
+      return;
+    }
+
+    console.log("clicked");
+
+    isSorting = true;
+
+    const headerIndex = $(this).index() - 1;
+
+    if (headerIndex < 0 || headerIndex >= tableData[0].length) {
+      // 키 값에 해당하는 열이 없을 경우 정렬 기능을 수행하지 않음
+      isSorting = false;
+      return;
+    }
+
+    if (previousHeaderIndex !== headerIndex) {
+      sortOrders = Array(tableData[0].length).fill(0);
+    }
+
+    sortOrders[headerIndex] = getNextSortOrder(sortOrders[headerIndex]);
+
+    const sortOrder = sortOrders[headerIndex];
+
+    tableData = await getSortedTableData(headerIndex, sortOrder);
+
+    previousHeaderIndex = headerIndex;
+
+    displayTableData(tableData, currentPage);
+
+    // 테이블 정렬이 완료되면 클릭을 허용
+    setTimeout(function () {
+      isSorting = false;
+    }, 0); // 0초 지연 시간으로 클릭 허용
+  });
 });
