@@ -356,7 +356,6 @@ first_round
 
 .category-contents-wrap > div{display:none}
 .category-contents-wrap > div.active{display:block;}
-.cate-wrap {margin: 10px;}
 .cate-wrap .category-contents-nav li{float:left; width:180px; margin-right:20px;}
 .cate-wrap .category-contents-nav li:last-child{margin-right:0px;}
 .cate-wrap .category-contents-nav li > div{text-align: center; font-size:17px; font-weight: bold; padding:16px 0;  color:#b9b9b9; cursor: pointer; border-radius: 10px; background:#ebecef;}
@@ -736,13 +735,13 @@ first_round
 
 /* paging */
 div.paginate{
-	display: flex;
     margin-top:20px;
-	justify-content: center;
+    display: flex;
 }
 div.paginate input[type='button']:hover{
     cursor: pointer;
-}div.paginate input[type='button']{
+}
+div.paginate input[type='button']{
     margin: 0px 2px;
     border: none;
     color: #a7a7a7;

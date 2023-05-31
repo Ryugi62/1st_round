@@ -1,14 +1,45 @@
-((window) => {
+/**
+ * Ligne Paginatejs
+ *
+ * Autor: Albert Eduardo Hidalgo Taveras
+ * Github: https://github.com/itsalb3rt
+ *
+ * El propósito de esta liberia es proporcionar una herramienta sin
+ * dependencias de Frameworks o otras dependencias molestas.
+ *
+ * Con unas pocas configuraciones esto es capaz de arrancar y liberarlo de mucho trabajo.
+ *
+ * *
+ * Ejemplo:
+ * let options = {
+ *       numberPerPage:5,
+ *       goBar:false,
+ *       pageCounter:false,
+ * };
+ *
+ * let filterOptions = {
+ *      el:'#searchBox'
+ * };
+ *
+ * paginate.init('.myTable',options,filterOptions);
+ **/
+
+(function (window) {
   "use strict";
 
-  const lignePaginate = () => {
-    const _lignePaginate = {};
+  // This function will contain all our code
+  function lignePaginate() {
+    var _lignePaginate = {};
 
-    _lignePaginate.init = (
+    /**
+     * Inicializa todas las configuracion y validaciones antes de ejecutar
+     * la paginacion y el filtro (en caso de ser asignado)
+     **/
+    _lignePaginate.init = function (
       el,
       options = { numberPerPage: 10, goBar: false, pageCounter: true },
       filter = [{ el: null }]
-    ) => {
+    ) {
       setTableEl(el);
       initTable(_lignePaginate.getEl());
       checkIsTableNull();
@@ -17,8 +48,10 @@
       setFilterOptions(filter);
       launchPaginate();
     };
-
-    const settings = {
+    /**
+     * Configuraciones de la paginacion
+     **/
+    var settings = {
       el: null,
       table: null,
       numberPerPage: 10,
@@ -29,42 +62,46 @@
       hasPagination: true,
     };
 
-    const filterSettings = {
+    var filterSettings = {
       el: null,
       filterBox: null,
+      trs: null,
     };
 
-    const setConstNumberPerPage = (number) => {
+    /**
+     * Setters private
+     **/
+
+    var setConstNumberPerPage = function (number) {
       settings.constNumberPerPage = number;
     };
-
-    const setNumberPerPage = (number) => {
+    var setNumberPerPage = function (number) {
       settings.numberPerPage = number;
     };
 
-    const initTable = (el) => {
-      if (el.includes("#")) {
+    var initTable = function (el) {
+      if (el.indexOf("#") > -1) {
         settings.table = document.getElementById(el.replace("#", "").trim());
-      } else if (el.includes(".")) {
+      } else if (el.indexOf(".") > -1) {
         settings.table = document.querySelector(el);
       }
     };
 
-    const iniFilter = (el) => {
-      if (el.includes("#")) {
+    var iniFilter = function (el) {
+      if (el.indexOf("#") > -1) {
         filterSettings.filterBox = document.getElementById(
           el.replace("#", "").trim()
         );
-      } else if (el.includes(".")) {
+      } else if (el.indexOf(".") > -1) {
         filterSettings.filterBox = document.querySelector(el);
       }
     };
 
-    const setTableEl = (el) => {
+    var setTableEl = function (el) {
       settings.el = el;
     };
 
-    const setFilterOptions = (filterOptions) => {
+    var setFilterOptions = function (filterOptions) {
       if (filterOptions.el != null) {
         setFilterEl(filterOptions.el);
         iniFilter(filterSettings.el);
@@ -73,49 +110,52 @@
       }
     };
 
-    const setFilterEl = (el) => {
+    var setFilterEl = function (el) {
       filterSettings.el = el;
     };
 
-    const setFunctionInFilterBox = () => {
-      filterSettings.filterBox.addEventListener("keyup", () =>
-        paginate.filter()
-      );
+    var setFunctionInFilterBox = function () {
+      filterSettings.filterBox.setAttribute("onkeyup", "paginate.filter()");
     };
 
-    const setGoBar = (value) => {
+    var setGoBar = function (value) {
       settings.goBar = value;
     };
 
-    const setPageCounter = (value) => {
+    var setPageCounter = function (value) {
       settings.pageCounter = value;
     };
 
-    _lignePaginate.getEl = () => {
+    /**
+     * Getters public
+     **/
+
+    _lignePaginate.getEl = function () {
       return settings.el;
     };
-
-    _lignePaginate.getTable = () => {
+    _lignePaginate.getTable = function () {
       return settings.table;
     };
-
-    _lignePaginate.getNumberPerPage = () => {
+    _lignePaginate.getNumberPerPage = function () {
       return settings.numberPerPage;
     };
 
-    _lignePaginate.getConstNumberPerPage = () => {
+    _lignePaginate.getConstNumberPerPage = function () {
       return settings.constNumberPerPage;
     };
 
-    let table,
+    /**
+     * Private Methods
+     **/
+
+    var table,
       tr = [],
       pageCount,
       numberPerPage,
-      th,
-      currentPage = 1;
+      th;
 
-    const setOptions = (options) => {
-      if (options.numberPerPage !== settings.numberPerPage) {
+    var setOptions = function (options) {
+      if (options.numberPerPage != settings.numberPerPage) {
         setNumberPerPage(options.numberPerPage);
       }
 
@@ -125,237 +165,258 @@
         setPageCounter(options.pageCounter);
     };
 
-    const checkIsTableNull = () => {
-      if (settings.table === null) {
-        throw new Error(
-          "Element " + _lignePaginate.getEl() + " does not exist"
-        );
+    var checkIsTableNull = function () {
+      if (settings.table == null) {
+        throw new Error("Element " + _lignePaginate.getEl() + " no exits");
       }
     };
 
-    const checkIsFilterBoxNull = () => {
-      if (filterSettings.filterBox === null) {
-        throw new Error(
-          "Element " + filterSettings.el + " does not exist in DOM"
-        );
+    var checkIsFilterBoxNull = function () {
+      if (filterSettings.filterBox == null) {
+        throw new Error("Element " + _lignePaginate.getEl() + " no exits");
       }
     };
 
-    const launchPaginate = () => {
-      let trNum = 0;
-      let numberOfEntries = 0;
+    var paginateAlreadyExists = function () {
+      let paginate = document.querySelector("div.paginate");
+      if (paginate != null) removePaginate(paginate);
+    };
 
-      if (filterSettings.filterBox !== null) {
-        tr = Array.from(
-          _lignePaginate
-            .getTable()
-            .getElementsByTagName("tbody")[0]
-            .getElementsByTagName("tr")
+    var removePaginate = function (element) {
+      element.parentNode.removeChild(element);
+    };
+
+    var hiddenPaginateControls = function () {
+      document.querySelector(".paginate_controls").style.visibility = "hidden";
+    };
+
+    var showPaginatecontrols = function () {
+      document.querySelector(".paginate_controls").style.visibility = "unset";
+    };
+
+    // (numberOfPage): número de páginas, (currentPage): página actual, la página seleccionada ..
+    var pageButtons = function (numberOfPage, currentPage) {
+      /** Estas variables deshabilitarán el botón "Prev" en la
+       * primera página y el botón "siguiente" en la ultima
+       **/
+      let prevDisabled = currentPage == 1 ? "disabled" : "";
+      let nextDisabled = currentPage == numberOfPage ? "disabled" : "";
+
+      /** Este (botones) creara todos los botones necesarios
+       * creará cada botón y establece el atributo onclick
+       * a la función "order" con un número especial (currentPage)
+       *
+       * Tambien se encarga de agregar el boton de "gotopage" y "pagecounter"
+       **/
+      let buttons =
+        "<input type='button' value='<' class='paginate_control_prev' onclick='paginate.sort(" +
+        (currentPage - 1) +
+        ")' " +
+        prevDisabled +
+        ">";
+      let buttonNumberOfPage =
+        "<input type='button' value='" +
+        currentPage +
+        " - " +
+        numberOfPage +
+        "' disabled>";
+
+      for (let $i = 1; $i <= numberOfPage; $i++) {
+        if (numberOfPage > 10) {
+          buttons += paginationMoreThatTenPage($i, numberOfPage);
+        } else {
+          buttons +=
+            "<input type='button' id='id" +
+            $i +
+            "'value='" +
+            $i +
+            "' onclick='paginate.sort(" +
+            $i +
+            ")'>";
+        }
+      }
+
+      let nextButton =
+        "<input type='button' value='>' class='paginate_control_next' onclick='paginate.sort(" +
+        (currentPage + 1) +
+        ")' " +
+        nextDisabled +
+        ">";
+      buttons += nextButton;
+
+      if (settings.pageCounter) buttons += buttonNumberOfPage;
+
+      if (settings.goBar) buttons += addGoToPage();
+
+      return buttons;
+    };
+    /**
+     * Cuando el numero de paginas supera las 10 se crea un mecanismo que oculta
+     * todas las paginas con numero superior a 4 y inferior a las ultima pagina
+     *
+     * Cuando se navega por la paginación solo se mostrara el numero actual
+     * Inicial
+     *      <- prev  (1)    2   3   4   ... 41 next ->
+     * Después
+     *      <- prev  1    2   3   4  (22)   ... 41 next ->
+     **/
+    var paginationMoreThatTenPage = function (iterator, numberOfPage) {
+      let referenceForTheLast = numberOfPage - 1;
+      let middleValue = "...";
+
+      if (iterator > referenceForTheLast || iterator < 5) {
+        return (
+          "<input type='button' id='id" +
+          iterator +
+          "'value='" +
+          iterator +
+          "' onclick='paginate.sort(" +
+          iterator +
+          ")'>"
         );
-        numberOfEntries = tr.length;
-        const filterValue = filterSettings.filterBox.value.toLowerCase();
-        let compareWith;
-        tr.forEach((element, index) => {
-          compareWith = element.textContent.toLowerCase();
-          if (compareWith.includes(filterValue)) {
-            tr[index].style.display = "";
-            trNum++;
-          } else {
-            tr[index].style.display = "none";
-          }
-        });
+      } else if (iterator + 1 == numberOfPage) {
+        return (
+          middleValue +
+          "<input type='button' id='id" +
+          iterator +
+          "'value='" +
+          iterator +
+          "' style='display: none' onclick='paginate.sort(" +
+          iterator +
+          ")'>"
+        );
       } else {
-        tr = Array.from(
-          _lignePaginate
-            .getTable()
-            .getElementsByTagName("tbody")[0]
-            .getElementsByTagName("tr")
+        return (
+          "<input type='button' id='id" +
+          iterator +
+          "'value='" +
+          iterator +
+          "' style='display: none' onclick='paginate.sort(" +
+          iterator +
+          ")'>"
         );
-        numberOfEntries = tr.length;
-        trNum = tr.length;
       }
-
-      currentPage = 1;
-
-      if (trNum === 0) {
-        if (document.getElementsByClassName("pagination").length !== 0) {
-          document.getElementsByClassName("pagination")[0].style.display =
-            "none";
-          document.getElementsByClassName("info")[0].style.display = "none";
-        }
-        return;
-      }
-
-      pageCount = Math.ceil(trNum / _lignePaginate.getNumberPerPage());
-
-      if (document.getElementsByClassName("pagination").length === 0) {
-        createPagination();
-      }
-
-      displayTable(numberOfEntries);
     };
 
-    const displayTable = (numberOfEntries) => {
-      let fromIndex = (currentPage - 1) * _lignePaginate.getNumberPerPage();
-      let toIndex = currentPage * _lignePaginate.getNumberPerPage();
-
-      if (toIndex > numberOfEntries) {
-        toIndex = numberOfEntries;
-      }
-
-      tr.forEach((element, index) => {
-        if (index >= fromIndex && index < toIndex) {
-          element.style.display = "";
-        } else {
-          element.style.display = "none";
-        }
-      });
-
-      updatePageCounter(numberOfEntries);
+    var addGoToPage = function () {
+      let inputBox =
+        "<input type='number' id='paginate_page_to_go' value='1' min='1' max='" +
+        settings.numberOfPages +
+        "'>";
+      let goButton =
+        "<input type='button' id='paginate-go-button' value='Go' onclick='paginate.goToPage()'>  ";
+      return inputBox + goButton;
     };
 
-    const createPagination = () => {
-      const paginationContainer = document.createElement("div");
-      paginationContainer.className = "paginate";
+    /**
+     * Public Methods
+     **/
 
-      if (settings.pageCounter) {
-        const infoDiv = document.createElement("div");
-        infoDiv.className = "info";
-        paginationContainer.appendChild(infoDiv);
-      }
+    // _lignePaginate.goToPage = function(){
+    //     let page = document.getElementById("paginate_page_to_go").value;
+    //     _lignePaginate.sort(page);
+    // }
 
-      const prevButton = document.createElement("input");
-      prevButton.type = "button";
-      prevButton.value = "<";
-      prevButton.addEventListener("click", () => goToPage("prev"));
-      prevButton.className = "paginate_control_prev";
-      paginationContainer.appendChild(prevButton);
+    var launchPaginate = function () {
+      paginateAlreadyExists();
+      table = settings.table;
+      numberPerPage = settings.numberPerPage;
+      let rowCount = table.rows.length;
+      // obtener el nombre de la etiqueta de la primera celda (en la primera fila)
+      let firstRow = table.rows[0].firstElementChild.tagName;
+      // Verificando si la tabla tiene encaebzado
+      let hasHead = firstRow === "TH";
+      // contadores de bucles, para comenzar a contar desde las filas [1] (2da fila) si la primera fila tiene una etiqueta de encabezado
+      let $i,
+        $ii,
+        $j = hasHead ? 1 : 0;
+      // contiene la primera fila si tiene un (<th>) y nada si (<td>)
+      th = hasHead ? table.rows[0].outerHTML : "";
+      pageCount = Math.ceil(rowCount / numberPerPage);
+      settings.numberOfPages = pageCount;
 
-      for (let i = 1; i <= pageCount; i++) {
-        const pageButton = document.createElement("input");
-        pageButton.type = "button";
-        pageButton.value = i;
-        pageButton.addEventListener("click", () => goToPage(i));
-        pageButton.className = "paginate_button";
-        if (i === currentPage) {
-          pageButton.classList.add("active");
-        }
-        paginationContainer.appendChild(pageButton);
-      }
-
-      const nextButton = document.createElement("input");
-      nextButton.type = "button";
-      nextButton.value = ">";
-      nextButton.addEventListener("click", () => goToPage("next"));
-      nextButton.className = "paginate_control_next";
-      paginationContainer.appendChild(nextButton);
-
-      _lignePaginate
-        .getTable()
-        .parentNode.insertBefore(
-          paginationContainer,
-          _lignePaginate.getTable().nextSibling
+      if (pageCount > 1) {
+        settings.hasPagination = true;
+        for ($i = $j, $ii = 0; $i < rowCount; $i++, $ii++)
+          tr[$ii] = table.rows[$i].outerHTML;
+        // Contenedor de los botones "paginate_controls"
+        table.insertAdjacentHTML(
+          "afterend",
+          "<div id='buttons' class='paginate paginate_controls'></div"
         );
-    };
-
-    const goToPage = (page) => {
-      if (page === "prev" && currentPage > 1) {
-        currentPage--;
-      } else if (page === "next" && currentPage < pageCount) {
-        currentPage++;
-      } else if (typeof page === "number" && page > 0 && page <= pageCount) {
-        currentPage = page;
+        // Inicializando la tabla en la pagina 1
+        _lignePaginate.sort(1);
       } else {
-        return;
-      }
-
-      displayTable(tr.length);
-      updatePageButtons(); // 페이지 버튼의 클래스를 업데이트
-    };
-
-    const updatePageButtons = () => {
-      const pageButtons = document.querySelectorAll(".paginate_button");
-
-      pageButtons.forEach((button, index) => {
-        if (index + 1 === currentPage) {
-          button.classList.add("active");
-        } else {
-          button.classList.remove("active");
-        }
-      });
-    };
-
-    const updatePageCounter = (numberOfEntries) => {
-      if (settings.pageCounter) {
-        const infoDiv = document.getElementsByClassName("info")[0];
-        infoDiv.innerHTML = `Page ${currentPage} of ${pageCount} (${numberOfEntries} entries)`;
+        settings.hasPagination = false;
       }
     };
 
-    const sortTableData = (column) => {
-      const columnTh = th[column];
-      const sortOrder = getNextSortOrder(columnTh);
+    _lignePaginate.sort = function (selectedPageNumber) {
+      /** crea (filas) una variable para contener el grupo de filas
+       * para ser mostrado en la página seleccionada,
+       * startPoint: la primera fila en cada página, Do The Math
+       **/
+      let rows = th,
+        startPoint =
+          settings.numberPerPage * selectedPageNumber - settings.numberPerPage;
+      for (
+        let $i = startPoint;
+        $i < startPoint + settings.numberPerPage && $i < tr.length;
+        $i++
+      )
+        rows += tr[$i];
 
-      tr.sort((a, b) => {
-        const aData = a.getElementsByTagName("td")[column].textContent;
-        const bData = b.getElementsByTagName("td")[column].textContent;
-
-        if (sortOrder === "asc") {
-          return aData.localeCompare(bData);
-        } else {
-          return bData.localeCompare(aData);
-        }
-      });
-
-      updateSortIcons(column, sortOrder);
-
-      displayTable(tr.length);
+      table.innerHTML = rows;
+      document.getElementById("buttons").innerHTML = pageButtons(
+        pageCount,
+        selectedPageNumber
+      );
+      document
+        .getElementById("id" + selectedPageNumber)
+        .classList.add("active");
+      /**
+       * Esto se utiliza para mostrar el numero de la pagina en la que se encuentra
+       * generalmente se usa cuando las paginas son mayor a 10
+       **/
+      document.getElementById("id" + selectedPageNumber).style.display =
+        "unset";
     };
 
-    const getNextSortOrder = (columnTh) => {
-      if (columnTh.classList.contains("asc")) {
-        columnTh.classList.remove("asc");
-        columnTh.classList.add("desc");
-        return "desc";
-      } else {
-        columnTh.classList.remove("desc");
-        columnTh.classList.add("asc");
-        return "asc";
+    /**
+     * Esto se encarga de filtrar la informacion segun una caja de texto
+     * tambien llama al metodo que oculta la parte de los botones de la
+     * paginacion
+     **/
+    _lignePaginate.filter = function () {
+      if (settings.hasPagination) {
+        setNumberPerPage(9999);
+        _lignePaginate.sort(1);
+        hiddenPaginateControls();
+      }
+      const filter = document
+        .querySelector(filterSettings.el)
+        .value.toUpperCase();
+      const trs = document.querySelectorAll(settings.el + " tr:not(.header)");
+      trs.forEach(
+        (tr) =>
+          (tr.style.display = [...tr.children].find((td) =>
+            td.innerHTML.toUpperCase().includes(filter)
+          )
+            ? ""
+            : "none")
+      );
+
+      if (filter.length == 0 && settings.hasPagination) {
+        setNumberPerPage(_lignePaginate.getConstNumberPerPage());
+        _lignePaginate.sort(1);
+        showPaginatecontrols();
       }
     };
 
-    const updateSortIcons = (column, sortOrder) => {
-      th.forEach((columnTh, index) => {
-        if (index === column) {
-          columnTh.classList.remove("asc", "desc");
-          columnTh.classList.add(sortOrder);
-        } else {
-          columnTh.classList.remove("asc", "desc");
-        }
-      });
-    };
+    return _lignePaginate;
+  }
 
-    const addSortListeners = () => {
-      th = Array.from(_lignePaginate.getTable().getElementsByTagName("th"));
-
-      th.forEach((columnTh, index) => {
-        columnTh.addEventListener("click", () => sortTableData(index));
-      });
-    };
-
-    const paginate = {
-      init: _lignePaginate.init,
-      filter: launchPaginate,
-      goToPage: goToPage,
-      sortTableData: sortTableData,
-    };
-
-    return paginate;
-  };
-
-  if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
-    module.exports = lignePaginate();
-  } else {
+  if (typeof window.paginate === "undefined") {
     window.paginate = lignePaginate();
   }
 })(window);

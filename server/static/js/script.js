@@ -1,83 +1,115 @@
-$(() => {
-  $(window).scroll(() => {
-    const nav = $("#header");
-
-    // 스크롤 이벤트 핸들러 등록
+$(function () {
+  $(window).scroll(function () {
+    var nav = $("#header");
     if ($(this).scrollTop() > 80) {
       nav.addClass("f-nav");
-      $("#logo img").attr("src", (index, attr) => attr.replace("_w", "_c"));
+      $("#logo img").attr("src", function (index, attr) {
+        return attr.replace("_w", "_c");
+      });
     } else {
       nav.removeClass("f-nav");
-      $("#logo img").attr("src", (index, attr) => attr.replace("_c", "_w"));
+      $("#logo img").attr("src", function (index, attr) {
+        return attr.replace("_c", "_w");
+      });
     }
+    var value = 0;
   });
 
   $(".tab-menu li:first-child").addClass("active");
-
-  // 탭 메뉴 클릭 이벤트 핸들러 등록
   $("ul.tab-menu li").click(function () {
-    $("ul.tab-menu li").removeClass("active");
-    $(this).addClass("active");
-    $(".tab-con").hide();
+    $("ul.tab-menu li").removeClass("active"); //Remove any "active" class
+    $(this).addClass("active"); //Add "active" class to selected tab
+    $(".tab-con").hide(); //Hide all tab content
 
-    const activeTab = $(this).find("a").attr("href");
-    $(activeTab).fadeIn();
-
+    var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+    $(activeTab).fadeIn(); //Fade in the active ID content
     return false;
   });
 
-  // Navigation (Mobile)
+  //Navication (Mobile)
   $("li.add_deps > a").on("click", function (e) {
     e.preventDefault();
     $("li.add_deps > ul").hide();
     $(this).next().show();
   });
 
-  $("#btn_nav").click(() => {
+  $("#btn_nav").click(function () {
     $("#nav").animate({ right: "0" });
   });
 
-  $("#btn_close_nav").click(() => {
+  $("#btn_close_nav").click(function () {
     $("#nav").animate({ right: "-100%" });
   });
 
-  // Top Button Click
-  $("#btn_top").click(() => {
+  //Top Button Click
+  $("#btn_top").click(function () {
     $("html, body").animate({ scrollTop: 0 }, 800);
     return false;
   });
 
-  // Top Button hover
+  //Top Button hover
   $("#btn_top img").hover(
     function () {
-      $(this).attr("src", (index, attr) => attr.replace("_off", "_on"));
+      $(this).attr("src", function (index, attr) {
+        return attr.replace("_off", "_on");
+      });
     },
     function () {
-      $(this).attr("src", (index, attr) => attr.replace("_on", "_off"));
+      $(this).attr("src", function (index, attr) {
+        return attr.replace("_on", "_off");
+      });
     }
   );
 
   setScreenSize();
 
-  $(".category-contents-nav > li > div").click(function () {
-    const t = parseInt($(this).attr("data-n"));
-    const cateWrap = $(this).closest(".cate-wrap");
+  /*
+	$( window ).resize(function() {
 
-    // 'data-n' 값에 따라 'on' 클래스를 추가하거나 제거합니다.
-    cateWrap.find(".category-contents-nav > li > div").removeClass("on");
-    cateWrap
-      .find(`.category-contents-nav > li > div[data-n=${t}]`)
-      .addClass("on");
+		var windowWidth = $( window ).width();
+		if(windowWidth < 992) { //창 가로 크기가 992 미만일 경우 
+			$("#btn_close_nav").click(function() {
+				$('#nav').animate({right:'-100%'});
+			});
+		} else { //창 가로 크기가 992보다 클 경우
+		
+		}
+	});
+*/
+
+  $(".category-contents-nav > li > div").click(function () {
+    t = parseInt($(this).attr("data-n"));
+    $(".category-contents-nav > li > div").removeClass("on");
+    $(this).addClass("on");
   });
 });
 
-// 화면 크기 설정 함수
-const setScreenSize = () => {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty("--vh", `${vh}px`);
-};
+function resizeYoutube() {
+  $("iframe").each(function () {
+    if (/^https?:\/\/www.youtube.com\/embed\//g.test($(this).attr("src"))) {
+      $(this).css("width", "100%");
+      $(this).css(
+        "height",
+        Math.ceil((parseInt($(this).css("width")) * 480) / 854) + "px"
+      );
+    }
+  });
+}
 
+function go_url(url) {
+  if (url != "") window.open(url, "_blank");
+}
+
+function setScreenSize() {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+}
 setScreenSize();
 
-// 윈도우 크기 변경 이벤트 핸들러 등록
+// js
+function setScreenSize() {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+}
+setScreenSize();
 window.addEventListener("resize", setScreenSize);

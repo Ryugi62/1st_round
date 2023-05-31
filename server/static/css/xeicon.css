@@ -4,13 +4,13 @@
 */
 
 @font-face {
-  font-family: 'xeicon';
+  font-family: "xeicon";
   src: url("../font/xeicon.eot?3ka2yj");
-  src: url("../font/xeicon.eot?3ka2yj#iefix") format("embedded-opentype"), 
-  url("../font/xeicon.woff2?3ka2yj") format("woff2"), 
-  url("../font/xeicon.ttf?3ka2yj") format("truetype"), 
-  url("../font/xeicon.woff?3ka2yj") format("woff"), 
-  url("../font/xeicon.svg?3ka2yj#xeicon") format("svg");
+  src: url("../font/xeicon.eot?3ka2yj#iefix") format("embedded-opentype"),
+    url("../font/xeicon.woff2?3ka2yj") format("woff2"),
+    url("../font/xeicon.ttf?3ka2yj") format("truetype"),
+    url("../font/xeicon.woff?3ka2yj") format("woff"),
+    url("../font/xeicon.svg?3ka2yj#xeicon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -18,7 +18,7 @@
 [class^="xi-"],
 [class*=" xi-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'xeicon' !important;
+  font-family: "xeicon" !important;
   display: inline-block;
   speak: none;
   font-style: normal;
@@ -3712,59 +3712,59 @@
 
 .xi-spin {
   -webkit-animation: xi-spin 2s infinite linear;
-          animation: xi-spin 2s infinite linear;
+  animation: xi-spin 2s infinite linear;
 }
 
 @-webkit-keyframes xi-spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }
 
 @keyframes xi-spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }
 
 .xi-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);
-          transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .xi-rotate-180 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .xi-rotate-270 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
   -webkit-transform: rotate(270deg);
-          transform: rotate(270deg);
+  transform: rotate(270deg);
 }
 
 .xi-flip-horizontal {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
   -webkit-transform: scale(-1, 1);
-          transform: scale(-1, 1);
+  transform: scale(-1, 1);
 }
 
 .xi-flip-vertical {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   -webkit-transform: scale(1, -1);
-          transform: scale(1, -1);
+  transform: scale(1, -1);
 }
 
 :root .xi-rotate-90,
@@ -3773,7 +3773,7 @@
 :root .xi-flip-horizontal,
 :root .xi-flip-vertical {
   -webkit-filter: none;
-          filter: none;
+  filter: none;
 }
 
 .xi-fw {
@@ -3804,17 +3804,17 @@
 }
 
 .xi-border {
-  padding: .2em .25em .15em;
+  padding: 0.2em 0.25em 0.15em;
   border: solid 0.08em #eee;
-  border-radius: .1em;
+  border-radius: 0.1em;
 }
 
 .pull-right {
   float: right;
-  margin-right: .3em;
+  margin-right: 0.3em;
 }
 
 .pull-left {
   float: left;
-  margin-right: .3em;
+  margin-right: 0.3em;
 }

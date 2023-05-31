@@ -1,28 +1,28 @@
-$(document).ready(async function () {
+$(document).ready(async () => {
   const tbody = $("tbody");
-  let tableData = await getTableData();
-  const n = 20; // 페이지당 데이터 개수
-
-  console.log(tableData[0]);
+  const originalTableData = await getTableData();
+  let tableData = [...originalTableData]; // copy original data
+  const n = 20; // number of data per page
   let sortOrders = Array(tableData[0].length).fill(0);
   let previousHeaderIndex = -1;
   let isSorting = false;
   let currentPage = 1;
-  let totalPages = Math.ceil(tableData.length / n); // Calculate the total number of pages
+  const totalPages = Math.ceil(tableData.length / n); // total number of pages
 
-  initializeTable(); // 테이블 초기화
+  initializeTable();
 
   async function initializeTable() {
-    // thead 초기화
     const thead = $("thead");
     const headers = Object.keys(tableData[0]);
 
     thead.empty();
 
     const headerCells = headers.map((header) => `<th>${header}</th>`);
-    headerCells.unshift("<th>No</th>"); // No 값을 추가
-    headerCells.push("<th>Download Application</th>"); // No 값을 추가
-    headerCells.push("<th>Test (Delete) Application</th>"); // No 값을 추가
+    headerCells.unshift("<th>No</th>");
+    headerCells.push(
+      "<th>Download Application</th>",
+      "<th>Test (Delete) Application</th>"
+    );
 
     thead.append(`<tr>${headerCells.join("")}</tr>`);
 
@@ -34,7 +34,6 @@ $(document).ready(async function () {
 
     const startIndex = (page - 1) * n;
     const endIndex = page * n;
-
     const currentPageData = data.slice(startIndex, endIndex);
 
     currentPageData.forEach((rowData, i) => {
@@ -46,9 +45,7 @@ $(document).ready(async function () {
       const tr = $("<tr></tr>").html(`
         <td>${startIndex + i + 1}</td>
         ${tableData}
-        <td>
-          <button type="submit" class="pass">Button</button>
-        </td>
+        <td><button type="submit" class="pass">Button</button></td>
         <td>
           <select class="app_group_select">
             <option value="1">1</option>
@@ -61,34 +58,30 @@ $(document).ready(async function () {
       tbody.append(tr);
     });
 
-    createPagination(); // 인덱스 이동 버튼 생성
+    createPagination();
   }
 
   function createPagination() {
     const paginationContainer = $("<div></div>").addClass("paginate");
 
-    const prevButton = $("<input>")
-      .attr("type", "button")
-      .val("<")
-      .addClass("paginate_control_prev");
-    prevButton.on("click", function () {
+    const createButton = (value, type, className) =>
+      $("<input>").attr({ type, value }).addClass(className);
+
+    const prevButton = createButton("<", "button", "paginate_control_prev");
+    prevButton.on("click", () => {
       if (currentPage > 1) {
-        currentPage--;
-        displayTableData(tableData, currentPage);
+        displayTableData(tableData, --currentPage);
       }
     });
 
     paginationContainer.append(prevButton);
 
     for (let i = 1; i <= totalPages; i++) {
-      const pageButton = $("<input>")
-        .attr("type", "button")
-        .val(i)
-        .addClass("paginate_button");
+      const pageButton = createButton(i, "button", "paginate_button");
       if (i === currentPage) {
         pageButton.addClass("active");
       }
-      pageButton.on("click", function () {
+      pageButton.on("click", () => {
         currentPage = i;
         displayTableData(tableData, currentPage);
       });
@@ -96,14 +89,10 @@ $(document).ready(async function () {
       paginationContainer.append(pageButton);
     }
 
-    const nextButton = $("<input>")
-      .attr("type", "button")
-      .val(">")
-      .addClass("paginate_control_next");
-    nextButton.on("click", function () {
+    const nextButton = createButton(">", "button", "paginate_control_next");
+    nextButton.on("click", () => {
       if (currentPage < totalPages) {
-        currentPage++;
-        displayTableData(tableData, currentPage);
+        displayTableData(tableData, ++currentPage);
       }
     });
 
@@ -111,65 +100,54 @@ $(document).ready(async function () {
 
     $("#pagination").remove();
 
-    // Create a new pagination element and append it below the table
-    const paginationElement = $("<div></div>")
+    $("<div></div>")
       .attr("id", "pagination")
-      .append(paginationContainer);
-    $("table").after(paginationElement);
+      .append(paginationContainer)
+      .insertAfter("table");
   }
 
   async function getSortedTableData(columnIndex, sortOrder) {
-    if (sortOrder === 1 || sortOrder === 2) {
-      const sortedData = sortTableData(tableData, columnIndex, sortOrder);
-      return sortedData;
-    } else {
-      // sortOrder가 1이나 2가 아닌 경우에는 새로운 데이터를 불러옴
-      tableData = await getTableData();
-      return tableData;
+    if (sortOrder === 0) {
+      return [...originalTableData]; // use original data if sortOrder is 0
     }
+
+    return sortTableData(tableData, columnIndex, sortOrder);
   }
 
   function sortTableData(data, columnIndex, sortOrder) {
     const sortedData = [...data];
 
     sortedData.sort((a, b) => {
-      const valueA = String(Object.values(a)[columnIndex]); // 수정된 부분
-      const valueB = String(Object.values(b)[columnIndex]); // 수정된 부분
+      const valueA = String(Object.values(a)[columnIndex]);
+      const valueB = String(Object.values(b)[columnIndex]);
 
-      if (sortOrder === 1) {
-        return valueA.localeCompare(valueB);
-      } else if (sortOrder === 2) {
-        return valueB.localeCompare(valueA);
-      }
+      return sortOrder === 1
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
     });
 
     return sortedData;
   }
 
   function getNextSortOrder(currentSortOrder) {
-    if (currentSortOrder === 1) {
-      return 2;
-    } else if (currentSortOrder === 2) {
-      return 0;
-    } else {
-      return 1;
-    }
+    return currentSortOrder === 1 ? 2 : currentSortOrder === 2 ? 0 : 1;
   }
 
-  function handleTooltip() {
+  const handleTooltip = () => {
     $("table").on("mouseenter", "td", function () {
-      var $this = $(this);
+      const $this = $(this);
       if (this.offsetWidth < this.scrollWidth && !$this.attr("title")) {
-        $this.tooltip({
-          title: $this.text(),
-          placement: "top",
-          trigger: "hover",
-          container: "body",
-        });
-        $this.tooltip("show");
+        $this
+          .tooltip({
+            title: $this.text(),
+            placement: "top",
+            trigger: "hover",
+            container: "body",
+          })
+          .tooltip("show");
       }
     });
-  }
+  };
 
   tbody.on("click", ".truncate-tooltip", handleTooltip);
 
@@ -180,20 +158,23 @@ $(document).ready(async function () {
       return;
     }
 
-    console.log("clicked");
-
     isSorting = true;
 
     const headerIndex = $(this).index() - 1;
 
     if (headerIndex < 0 || headerIndex >= tableData[0].length) {
-      // 키 값에 해당하는 열이 없을 경우 정렬 기능을 수행하지 않음
       isSorting = false;
       return;
     }
 
     if (previousHeaderIndex !== headerIndex) {
       sortOrders = Array(tableData[0].length).fill(0);
+      $("th").css("font-weight", "normal"); // Reset font weight for all headers
+      $("th").each(function () {
+        // Remove existing arrows
+        let originalText = $(this).text().replace(/ ↓| ↑/g, "");
+        $(this).html(originalText);
+      });
     }
 
     sortOrders[headerIndex] = getNextSortOrder(sortOrders[headerIndex]);
@@ -202,13 +183,29 @@ $(document).ready(async function () {
 
     tableData = await getSortedTableData(headerIndex, sortOrder);
 
+    let originalText = $(this).text().replace(/ ↓| ↑/g, "");
+
+    // Add or remove arrow based on the sortOrder
+    if (sortOrder === 1) {
+      $(this).html(originalText + " ↓");
+    } else if (sortOrder === 2) {
+      $(this).html(originalText + " ↑");
+    } else {
+      $(this).html(originalText); // Clear the arrow
+    }
+
+    if (sortOrder !== 0) {
+      $(this).css("font-weight", "bold"); // Make the current sorting header bold
+    } else {
+      $(this).css("font-weight", "normal"); // Make the current sorting header normal weight
+    }
+
     previousHeaderIndex = headerIndex;
 
     displayTableData(tableData, currentPage);
 
-    // 테이블 정렬이 완료되면 클릭을 허용
-    setTimeout(function () {
+    setTimeout(() => {
       isSorting = false;
-    }, 0); // 0초 지연 시간으로 클릭 허용
+    }, 0);
   });
 });

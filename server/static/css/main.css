@@ -1266,38 +1266,5 @@ body.fp-viewing-05 #apply_day .apply_day_wrap .btn_more {
   }
 }
 
-table {
-  /* border-collapse: collapse;
-  width: 100%; */
-}
-
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.truncate-tooltip {
-  position: relative;
-}
-
-.truncate-tooltip:hover {
-  overflow: visible;
-  white-space: normal;
-  z-index: 1;
-}
-
-.truncate-tooltip:hover::after {
-  content: attr(data-value);
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #000;
-  color: #fff;
-  padding: 5px;
-  border-radius: 4px;
-  white-space: normal;
+@media (max-width: 360px) {
 }
