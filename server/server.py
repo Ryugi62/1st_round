@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory, jsonify
+from flask import Flask, request, send_from_directory, jsonify, g
 from flask_cors import CORS
 import mysql.connector
 import os
@@ -6,17 +6,28 @@ import os
 app = Flask(__name__, static_folder='static')
 CORS(app)
 
-# MySQL 연결 설정
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="password",
-    database="1st_round"
-)
+# MySQL 연결 정보
+mysql_config = {
+    'host': "localhost",
+    'user': "root",
+    'password': "password",
+    'database': "1st_round"
+}
 
 # 데이터의 키 순서 정의
 key_order = ["memberID", "Organization", "Type_3", "Country", "City_name", "Project_Title", "Type_2",
              "Email", "Eval_R1", "Score_from_Eval_R2", "Weighted_Score_for_Eval_R3", "Final_voting_result"]
+
+
+@app.before_request
+def before_request():
+    g.db = mysql.connector.connect(**mysql_config)
+
+
+@app.after_request
+def after_request(response):
+    g.db.close()
+    return response
 
 
 @app.route("/")
@@ -27,7 +38,7 @@ def first_round():
 # /api/data 경로로 GET 요청이 오면 데이터베이스에서 데이터를 가져와서 반환
 @app.route("/api/data")
 def api_data():
-    cursor = db.cursor()
+    cursor = g.db.cursor()
 
     # Sorting
     sort_field = request.args.get("sort")

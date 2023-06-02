@@ -25,6 +25,7 @@ $(document).ready(async () => {
     );
 
     thead.append(`<tr>${headerCells.join("")}</tr>`);
+    $("th").css("cursor", "pointer");
 
     displayTableData(tableData, currentPage);
   }

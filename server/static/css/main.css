@@ -568,10 +568,11 @@ body.fp-viewing-03 .fp-slidesNav ul li:hover a.active span {
   border-bottom: 1px solid #fff;
 }
 .tab-con table th {
-  padding: 10px 20px;
   color: #fff;
-  font-size: 18px;
   width: 250px;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 18px;
 }
 .tab-con table td {
   padding: 10px 20px;
@@ -1081,6 +1082,7 @@ body.fp-viewing-05 #apply_day .apply_day_wrap .btn_more {
     font-size: 18px;
     line-height: 24px;
   }
+
   .tab-con table th {
     width: auto;
     font-size: 14px;
