@@ -1,13 +1,13 @@
 $(document).ready(async () => {
   const tbody = $("tbody");
   const originalTableData = await getTableData();
-  let tableData = [...originalTableData]; // copy original data
-  const n = 20; // number of data per page
+  let tableData = [...originalTableData];
+  const n = 20; // 페이지당 데이터 개수
   let sortOrders = Array(tableData[0].length).fill(0);
   let previousHeaderIndex = -1;
   let isSorting = false;
   let currentPage = 1;
-  const totalPages = Math.ceil(tableData.length / n); // total number of pages
+  const totalPages = Math.ceil(tableData.length / n); // 총 페이지 수
 
   initializeTable();
 
@@ -65,10 +65,9 @@ $(document).ready(async () => {
   function createPagination() {
     const paginationContainer = $("<div></div>").addClass("paginate");
 
-    const createButton = (value, type, className) =>
-      $("<input>").attr({ type, value }).addClass(className);
-
-    const prevButton = createButton("<", "button", "paginate_control_prev");
+    const prevButton = $("<input>")
+      .attr({ type: "button", value: "<" })
+      .addClass("paginate_control_prev");
     prevButton.on("click", () => {
       if (currentPage > 1) {
         displayTableData(tableData, --currentPage);
@@ -78,7 +77,9 @@ $(document).ready(async () => {
     paginationContainer.append(prevButton);
 
     for (let i = 1; i <= totalPages; i++) {
-      const pageButton = createButton(i, "button", "paginate_button");
+      const pageButton = $("<input>")
+        .attr({ type: "button", value: i })
+        .addClass("paginate_button");
       if (i === currentPage) {
         pageButton.addClass("active");
       }
@@ -90,7 +91,9 @@ $(document).ready(async () => {
       paginationContainer.append(pageButton);
     }
 
-    const nextButton = createButton(">", "button", "paginate_control_next");
+    const nextButton = $("<input>")
+      .attr({ type: "button", value: ">" })
+      .addClass("paginate_control_next");
     nextButton.on("click", () => {
       if (currentPage < totalPages) {
         displayTableData(tableData, ++currentPage);
@@ -109,7 +112,7 @@ $(document).ready(async () => {
 
   async function getSortedTableData(columnIndex, sortOrder) {
     if (sortOrder === 0) {
-      return [...originalTableData]; // use original data if sortOrder is 0
+      return [...originalTableData];
     }
 
     return sortTableData(tableData, columnIndex, sortOrder);
@@ -170,9 +173,8 @@ $(document).ready(async () => {
 
     if (previousHeaderIndex !== headerIndex) {
       sortOrders = Array(tableData[0].length).fill(0);
-      $("th").css("font-weight", "normal"); // Reset font weight for all headers
+      $("th").css("font-weight", "normal");
       $("th").each(function () {
-        // Remove existing arrows
         let originalText = $(this).text().replace(/ ↓| ↑/g, "");
         $(this).html(originalText);
       });
@@ -186,19 +188,18 @@ $(document).ready(async () => {
 
     let originalText = $(this).text().replace(/ ↓| ↑/g, "");
 
-    // Add or remove arrow based on the sortOrder
     if (sortOrder === 1) {
       $(this).html(originalText + " ↓");
     } else if (sortOrder === 2) {
       $(this).html(originalText + " ↑");
     } else {
-      $(this).html(originalText); // Clear the arrow
+      $(this).html(originalText);
     }
 
     if (sortOrder !== 0) {
-      $(this).css("font-weight", "bold"); // Make the current sorting header bold
+      $(this).css("font-weight", "bold");
     } else {
-      $(this).css("font-weight", "normal"); // Make the current sorting header normal weight
+      $(this).css("font-weight", "normal");
     }
 
     previousHeaderIndex = headerIndex;
